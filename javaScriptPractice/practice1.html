@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<!-- javascript -->
+<!-- 目標:使用javascript實作出jquery -->
+<script>
+ //内部函数
+ function getEle(str,aParent){
+      var arr=str.match(/\S+/g);//[#div1,ul,li,.box]
+      var aParent=aParent||[document];//父
+      var aChild=[];//子
+      for(var i=0;i<arr.length;i++){
+        aChild=getByStr(aParent,arr[i]);//抓到的是子
+        aParent=aChild;//子父更新
+      }
+
+      return aChild;//返回子
+    }
+    function getByClass(oParent,sClass){
+      if(oParent.getElementsByClassName){//是否存在某个属性
+        return oParent.getElementsByClassName(sClass);
+      }
+      var aEle=oParent.getElementsByTagName('*');
+      var result=[];
+      var re = new RegExp('\\b'+sClass+'\\b');//正则 单词边界
+      for(var i=0;i<aEle.length;i++){
+        if(re.test(aEle[i].className)){
+          result.push(aEle[i]);
+        }
+      }
+      return result;
+    }
+    function getByStr(aParent,str){
+      //str == #div1/ul/li/.box
+      var aChild=[]; //存放抓到的子
+
+      for(var j=0;j<aParent.length;j++){//父是个多个
+        switch (str.charAt(0)){
+          case '#'://id
+            console.log("str.substring(1) : " + str.substring(1))
+            var ele = document.getElementById(str.substring(1));
+			console.log("sdocument.getElementById(str.substring(1)) : " + document.getElementById(str.substring(1)))
+            ele && aChild.push(ele);
+
+         
+            break;
+          case '.': //className
+            // var aEle = aParent[j].getElementsByClassName(str.substring(1));
+            var aEle = getByClass(aParent[j],str.substring(1));
+            for(var i=0;i<aEle.length;i++){
+              aChild.push(aEle[i]);
+            }
+            break;
+          default: //tagname
+            //div#div1 | li.box | div[title=bmw] | li:eq(3) | li:gt(3) | li:odd
+            if(/\w+#\w+/.test(str)){// div#div1
+              var arr = str.split('#');//[div,div1];
+              var aEle=aParent[j].getElementsByTagName(arr[0]);
+              for(var i=0;i<aEle.length;i++){
+                if(aEle[i].id===arr[1]){
+                  aChild.push(aEle[i]);
+                }
+              }
+            }else if(/\w+\.\w+/.test(str)){// li.box
+              var arr = str.split('.');//[li,box];
+              var aEle=aParent[j].getElementsByTagName(arr[0]);
+              var re = new RegExp('\\b'+arr[1]+'\\b');//正则 单词边界
+              for(var i=0;i<aEle.length;i++){
+                if(re.test(aEle[i].className)){
+                  aChild.push(aEle[i]);
+                }
+              }
+            }else if(/\w+\[\w+=\w+\]/.test(str)){//div[title=bmw]
+              var arr = str.split(/\[|=|\]/g);//[div,title,bmw];
+              var aEle=aParent[j].getElementsByTagName(arr[0]);
+              for(var i=0;i<aEle.length;i++){
+                if(aEle[i].getAttribute(arr[1])===arr[2]){//获取DOM属性
+                  aChild.push(aEle[i]);
+                }
+              }
+            }else if(/\w+:\w+(\(\.\))?/.test(str)){//li:eq(3) | li:gt(3) | li:odd
+              var arr = str.split(/:|\(|\)/g);//[li,eq,3,];
+              var aEle = aParent[j].getElementsByTagName(arr[0]);
+              switch (arr[1]){
+                case 'eq':
+                  aEle[arr[2]] && aChild.push(aEle[arr[2]]);
+                  break;
+                case 'gt':
+                  for(var i=arr[2]-0+1;i<aEle.length;i++){
+                    aChild.push(aEle[i]);
+                  }
+                  break;
+                case 'lt':
+                  for(var i=0;i<arr[2];i++){
+                    aChild.push(aEle[i]);
+                  }
+                  break;
+                case 'odd':
+                  for(var i=1;i<aEle.length;i+=2){
+                    aChild.push(aEle[i]);
+                  }
+                  break;
+                case 'even':
+                  for(var i=0;i<aEle.length;i+=2){
+                    aChild.push(aEle[i]);
+                  }
+                  break;
+                case 'first':
+                  //.
+                  break;
+                case 'last':
+                  //.
+                  break;
+              }
+            }else{//tabname
+              var aEle = aParent[j].getElementsByTagName(str);
+              for(var i=0;i<aEle.length;i++){
+                aChild.push(aEle[i]);
+              }
+            }
+        }
+      }
+
+      return aChild;//返回子
+    }
+    
+    //類別
+    //ES7用法 : class function jQuery(){}
+    //ES5用法為以下
+    function jQuery(args){
+        this.elements=[];//放置抓取到的元素
+        //判斷類型
+        switch (typeof args){ 
+        //抓方法
+        case 'function':
+          //dom ready
+          ready(args);
+          break;
+        //抓對象
+        case 'string':
+         this.elements=getEle(args);
+          break;
+        //抓物件
+        case 'object':
+          //包装   
+          if(args.length){
+            for(var i=0;i<args.length;i++){
+              this.elements.push(args[i]);
+            }
+          }else{
+            this.elements.push(args);
+          }
+          
+          break;
+      }
+    }
+
+    //$ = jquery
+    function $(args){
+      return new jQuery(args);
+    }
+
+    function ready(fn){
+        document.addEventListener('DOMContentLoaded',fn,false);
+    }
+     //内部函数
+    function getEle(str,aParent){
+      var arr=str.match(/\S+/g);//[#div1,ul,li,.box]
+      var aParent=aParent||[document];//父
+      var aChild=[];//子
+      for(var i=0;i<arr.length;i++){
+        aChild=getByStr(aParent,arr[i]);//抓到的是子
+        aParent=aChild;//子父更新
+      }
+
+      return aChild;//返回子
+    }
+</script>
+<!-- jquery -->
+<!--<script src="./jquery-1.7.2.js"></script>-->
+<script>
+
+new jQuery(function(){
+    //抓方法
+    console.log("test");
+    //抓id
+    console.log(new jQuery('#div1'));
+    //抓元素
+    console.log(new jQuery(document.getElementsByTagName("div")));
+})
+
+
+
+</script>
+<style>
+    #div1{
+          background:red;
+          width:100px;
+          height:100px;
+          position: absolute;left:0;top:0;
+    }
+    h3{height:30px;background:yellow}
+</style>
+<title>Insert title here</title>
+</head>
+<body>
+        <div id="div1">box1</div>
+        <div id="div2">box2</div>
+        <div id="div3">box<3/div>
+</body>
+</html>
