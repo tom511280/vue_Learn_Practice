@@ -11,12 +11,22 @@
     <!--v層-->
     <div id="app">
         <!-- vue開始接管 dom元素 -->
+        <!--
+            v-開頭的都為指令
+        -->
         <div v-text="str"></div>
+        <div v-html="strong"></div>
+        <!--
+            v-bind:開頭表示要使用vue綁定html屬性
+        -->
+        <img v-bind:src="url" alt="">
+        <!-- vue簡寫 -->
+        <img :src="url" alt="">
     </div>
     <script>
         //vm層
-        let vm = console.log(Vue);
-        new Vue({
+        console.log(Vue);
+        let vm = new Vue({
             el : '#app',
             //m層
             data : {
@@ -24,7 +34,9 @@
                 str:'bmw7',
                 num:110,
                 arr:['apple','orange','pear'],
-                json:{a:1,b:2}
+                json:{a:1,b:2},
+                strong:'<strong>強壯</strong>',
+                url:'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png'
             } 
         })
     </script>
