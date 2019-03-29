@@ -3,61 +3,40 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>practice3_事件</title>
+    <title>practice4_事件</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="./vue.js"></script>
 </head>
 <body>
-    <div id="app">
-     {{arr}}
-     <ul>
-         <!-- 陣列(arr)裡面的每一項值(val) -->
-         <li v-for="val in arr">{{val}}</li>
-     </ul>
-     <!-- {{}}內可以寫表達式-->
-     <hr>
-     {{json.a}} / {{json.b}}
-
-     <hr>
-     <!--數據嵌套-->
-     <ul>
-         <li v-for="item in news">
-                <a :href="item.href" :title="item.title">{{item.content}}</a>
-                <ul>
-                    <li v-for="itemChild in item.child">
-                        <a :href="itemChild.href" :title="itemChild.title">{{itemChild.content}}</a>
-                    </li>
-                </ul>
-         </li>
-     </ul>
+    <div class="box">
+        <!-- 一般綁定事件方法 -->
+        <input type="button" :value="msg" v-on:click="show($event,'一般綁定事件方法')">
+        <!-- 簡寫綁定事件方法 -->
+        <input type="button" :value="msg" @click="show($event,'簡寫綁定事件方法')">
     </div>
     <script>
-        //vm層
-        console.log(Vue);
         let vm = new Vue({
-            el : '#app',
-            //m層
+            el : '.box',
             data : {
-                //數據名:值
-                str:'bmw7',
-                num:110,
-                arr:['apple','orange','pear'],
-                json:{a:1,b:2},
-                strong:'<strong>強壯</strong>',
-                url:'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png',
-                news:[
-                    {id:1,title:'xxx1',content:'ooo1',href:'#1',child:[
-                        {id:1,title:'iii1',content:'ooo1',href:'#11'},
-                        {id:1,title:'iii2',content:'ooo1',href:'#12'}
-                    ]},
-                    {id:1,title:'xxx2',content:'ooo2',href:'#2',child:[
-                        {id:1,title:'iii1',content:'ooo1',href:'#11'},
-                        {id:1,title:'iii2',content:'ooo1',href:'#12'}
-                    ]},
-                    {id:1,title:'xxx3',content:'ooo3',href:'#3'},
-                    {id:1,title:'xxx4',content:'ooo4',href:'#4'},
-                ]
-            } 
+                msg : 'bmw'
+            }, 
+            methods:{ //定義方法
+                show:function(ev, arg){
+                    alert(ev); //事件參數
+                    alert(arg); //參數
+                    console.log(ev);
+
+                    //this表示根實例/根組件
+                    console.log(this);
+                    console.log(this.msg);
+                    this.msg = '更改了'
+
+                    //取得事件的綁定對象
+                    console.log(ev.srcElement);
+                    
+
+                }
+            }
         })
     </script>
 </body>

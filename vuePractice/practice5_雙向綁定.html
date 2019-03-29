@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>practice5_雙向綁定</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="./vue.js"></script>
+</head>
+<body>
+    <div class="box">
+        <!-- 單向綁定 -->
+        {{msg}}
+        <!-- 單向綁定 -->
+        <input type="text" :value="msg">
+        <!-- 雙向綁定 會連帶變更到屬性值 -->
+        <input type="text" v-model="msg">
+
+    </div>
+    <script>
+        let vm = new Vue({
+            el : '.box',
+            data : {
+                msg : 'bmw'
+            }
+        })
+    </script>
+</body>
+</html>
