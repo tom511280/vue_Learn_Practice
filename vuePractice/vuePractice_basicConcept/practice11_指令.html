@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>practice11_指令</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="./vue.js"></script>
+    <style>
+        .box{
+            background: red
+        }
+        .w{
+            width:300px;
+        }
+    </style>
+</head>
+<body>
+    <div id='app'>
+        <input type="button" @click="bl=!bl">
+        <!-- 
+            作法 : 隱藏時直接移除元素  
+            結論 : 對元素做操作
+        -->
+        <div v-if="bl" class="box w">box</div>
+        <!-- 
+            使用 : display: none; 做隱藏處理
+            結論 : 對樣式做操作
+        -->
+        <div v-show="bl" class="box w">box</div>
+    </div>
+    <script>
+        new Vue({
+            el : '#app',
+            data : {
+                str:'bmw',
+                bl:false
+            }
+        })
+    </script>
+</body>
+</html>

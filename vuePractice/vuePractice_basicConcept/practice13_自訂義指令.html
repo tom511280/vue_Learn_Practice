@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>practice13_自訂義指令</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="./vue.js"></script>
+    <style>
+        .box{
+            background: red
+        }
+        .w{
+            width:300px;
+        }
+        .h{
+            height:300px;
+        }
+    </style>
+</head>
+<body>
+    <div id='app'>
+        <div v-red>box3</div>
+    </div>
+    <script>
+        //指令兩種定義方式
+
+        //1.定義在全局
+        //Vue.directive("指令名","函數");
+        //注意不帶v-
+        Vue.directive("red",function(el){
+            console.log("調用了v-red")
+            console.log(el) //使用了指令的元素
+            el.style.background = 'red'; //操作dom不推薦
+        });
+
+        //2.定義在組件
+        new Vue({ 
+            el : '#app',
+            data : {
+                str:'bmw',
+                bl:false,
+                cl:'box w h',
+                json:{box:true,w:true,h:false},
+                json2:{background:'red',width:'10px'},
+                //background-ground用法改成backgroundColor
+                arr:[{backgroundColor:'blue'},{width:'10px'}]
+            }
+        })
+    </script>
+</body>
+</html>

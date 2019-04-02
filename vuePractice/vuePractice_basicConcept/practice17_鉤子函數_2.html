@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>practice16_鉤子函數_1</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="./vue.js"></script>
+    <style>
+        .box{
+            background: red;
+            width: 100px;
+            height: 100px;
+            position: absolute;
+            left: 0;
+            top: 0
+        }
+        .w{
+            width:300px;
+        }
+        .h{
+            height:300px;
+        }
+    </style>
+</head>
+<body>
+    <div id='app'>
+        <input type="text" v-focus>
+    </div>
+    <script>
+       Vue.directive("focus",function(el){
+            console.log("調用了v-focus")
+            el.focus();
+         
+        });
+
+        new Vue({ 
+            el : '#app'
+            ,data : {
+                color:'yellow'
+            }
+        })
+    </script>
+</body>
+</html>
