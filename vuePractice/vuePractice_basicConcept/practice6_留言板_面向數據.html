@@ -1,0 +1,164 @@
+<!doctype html>
+<!-- 留言板 : 以boostrap4為例-->
+<!-- https://v4.bootcss.com/docs/4.0/getting-started/introduction/ -->
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://cdn.bootcss.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+
+    <title>practice6_留言板_面向數據</title>
+    
+</head>
+  </head>
+  <body>
+    <h1>Hello, world!</h1>
+
+    <div class="container">
+        <h3>留言板</h3>
+        <!-- 可以透過插件快速產生 start -->
+        <div class="form-group">
+          <label for="">用戶名</label>
+          <input v-model="insertInput.user" type="text" class="form-control" placeholder="">
+        </div>
+        <div class="form-group">
+          <label for="">內容</label>
+          <textarea v-model="insertInput.content" class="form-control" name="" id="" rows="3"></textarea>
+        </div>
+        <button class="btn btn-primary" @click="submit">提交</button>
+        <hr>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>用戶</th>
+                    <th>內容</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- 
+                      :key="index"(默認用法)  
+                        此法會導致VUE以元素index為識別標誌 
+                      :key="item.id":  
+                        此法VUE以元素item.id為識別標誌，可以明確指出哪個單一元素需要變更屬性 
+                -->
+                <tr v-for="(item, index) in list" :key="item.id">
+                    <!-- 用法1 -->
+                    <td scope="row" v-html="item.user"></td>
+                    <!-- 用法2 -->
+                    <td>{{item.content}}</td>
+                    <td>
+                        <button @click="deleteData(index)" class="btn btn-danger">刪除</button>
+                        <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#todolist" @click="openUpdateDataModal(index)">修改</button>
+                        <button @click="changeColor" class="btn">更改顏色</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td scope="row"></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+            <tfoot>
+                <tr>
+                    <td colspan="3">
+                            <button class="btn" @click="cleanAllData">清空留言</button>
+                    </td>
+                </tr>
+
+            </tfoot>
+        </table>
+        <!-- Button trigger modal -->
+
+      
+       <!-- Modal -->
+       <div class="modal fade" id="todolist" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="exampleModalLabel">{{updateInput.user}}
+              </h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="form-group">
+                <label for=""></label>
+                <textarea class="form-control" name="" id="" rows="3" v-model="updateInput.content"></textarea>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+              <button type="button" class="btn btn-primary" @click="updateData(updateInput.index)" data-dismiss="modal">Save changes</button>
+            </div>
+          </div>
+        </div>
+       </div>
+        <!-- 可以透過插件快速產生 end -->
+    </div>
+    <script src="./vue.js"></script>
+    <script>
+        new Vue({
+            el:'.container',
+            data:{
+                insertInput:{user:'',content:'', id:-1},
+                updateInput:{user:'',content:'', index:-1, id:-1},
+                updateArr:[],
+                list:[
+                    {user:'tom',content:'QQ1', id:1},
+                    {user:'sun',content:'QQ2', id:2}
+                ]
+            },
+            methods:{
+                submit:function(){
+                    console.log("do submit")
+                    console.log("insertInput.user : " + this.insertInput.user)
+                    console.log("insertInput.content : " + this.insertInput.content)
+
+                    //直接加入新obj 才不會傳到位址
+                    this.list.push({
+                      user:this.insertInput.user,
+                      content:this.insertInput.content
+                    });
+
+                },
+                deleteData:function(index){
+                    console.log("do deleteData")
+                    this.list.splice(index,1);
+                },
+                openUpdateDataModal:function(index){
+                    this.updateInput.user = this.list[index].user;
+                    this.updateInput.content = this.list[index].content;  
+                    this.updateInput.index = index;  
+                },
+                updateData:function(index){
+                    console.log("do updateData")
+                    console.log("do this.updateInput.user " + this.updateInput.user)
+                    console.log("do this.updateInput.content " + this.updateInput.content)
+                    
+                    this.list[index].user = this.updateInput.user; 
+                    this.list[index].content = this.updateInput.content; 
+
+                },
+                cleanAllData:function(){
+                    console.log("do cleanAllData")
+                    this.list.splice(0,this.list.length);
+                }
+                ,
+                changeColor:function(ev){
+                    console.log("do changeColor")
+                    ev.srcElement.parentNode.parentNode.style.background='red';
+                }
+            }
+        })
+    
+    </script>
+    <script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+  </body>
+</html>

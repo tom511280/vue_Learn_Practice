@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>practice_10計算屬性和函數區別</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="./vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <input type="button" value="變更值" @click="changeValue">
+        <!-- 函式每次都會呼叫 -->
+        <div>{{ checkStr() }}</div>
+        <div>{{ checkStr() }}</div>
+        <div>{{ checkStr() }}</div>
+        <!-- 計算屬性根據屬性值來驅動 每變更一次，啟動一次-->
+        <div>{{ cptStr }}</div>
+        <div>{{ cptStr }}</div>
+        <div>{{ cptStr }}</div>
+        <!-- 
+            故「計算屬性」性能優於「函式」 
+            適合場合:
+            1.篩選
+            2.列表渲染
+        -->
+        
+    </div>
+    <script>
+        new Vue({
+            el : '#app',
+            data : {
+                str:'i love you'
+            },
+            methods:{
+                checkStr:function(){
+                    console.log("fn...")
+                    return this.str.split(' ').reverse().join(' ');
+                },
+                changeValue:function(){
+                    this.str='value is Change'
+                }
+            },
+            computed:{
+                cptStr:function(){
+                    console.log("computed...")
+                    return this.str.split(' ').reverse().join(' ');
+                }
+            }
+        })
+    </script>
+</body>
+</html>

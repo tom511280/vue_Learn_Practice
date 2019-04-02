@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>practice9_查詢</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="./vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <input type="text" v-model="ipt">
+        <ul>
+            <li v-for="(val,index) in cptList" :key="index">
+                {{val}}
+            </li>
+        </ul>
+    </div>
+    <script>
+        new Vue({
+            el : '#app',
+            data : {
+                ipt:'',
+                list:['apple','orange','pear','apc']
+            },
+            computed:{
+                //計算屬性:函數
+                //值發生變化時，會再次計算
+                cptList:function(){
+                    console.log("...");
+                    var _this = this;
+                    var result = [];
+                    this.list.forEach(function(val, index){
+                        if(val.indexOf(_this.ipt) != -1){
+                            result.push(val);
+                        }
+                    });
+                    return result;
+                }
+            } 
+        })
+    </script>
+</body>
+</html>
