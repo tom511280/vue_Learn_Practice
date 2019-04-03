@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>practice18_過濾器_組件宣告</title>
+  <script src="./vue.js"></script>
+</head>
+  <body>
+      <!--
+      1.x 有自帶過濾器
+      2.x 沒有自帶過濾器 需要自己定義
+      3.使用方式:
+      {{ num | 過濾器名}} 
+      -->
+    <div id="app">
+      {{ num | toFix }} <br>
+      {{ num | currency('$',3) }} 
+    </div>
+    <script>
+    //過濾器兩種定義方式
+    //1.定義在全局
+    //...
+
+    //2.定義在組件
+    let vm = new Vue({ 
+        el : '#app',
+        data : {
+          num:22.22222222
+        },
+        filters:{
+          toFix:function(data){
+            console.log("do toFix");
+            return data.toFixed(2);
+          },
+          currency:function(data, currency, dight){
+            console.log("do currency");
+            return currency+data.toFixed(dight);
+          }
+        }
+    });
+    </script>
+  </body>
+</html>
