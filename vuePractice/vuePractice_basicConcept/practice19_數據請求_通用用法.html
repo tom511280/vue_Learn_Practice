@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="en">
   <head>
-    <title>practice19_數據請求_通用用法</title>
+    <title>practice19_數據請求</title>
     <!-- Required meta tags -->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
@@ -11,8 +11,6 @@
     <script src="./vue.js"></script>
     <!--<script src="./vue-resource.js"></script>-->
     <script src="./vue-resource@1.3.5"></script>
-    <!--<script src="https://unpkg.com/axios/dist/axios.min.js"></script>-->
-    
     
   </head>
   <body>
@@ -24,25 +22,6 @@
       {{msg}}
     </div>
     <script>
-      /*vue-resource使用方式
-      this.$http.get('url地址?key=value&key=value').then(succFN,errorFn)
-		this.$http.get('url地址',{配置}).then(succFN,errorFn)
-		this.$http.post('url地址',{数据},{配置}).then(succFN,errorFn)
-		this.$http.jsonp('url地址',{配置}).then(succFN,errorFn)
-		this.$http({})
-			配置:
-				params: {key:value}  携带数据  get
-				headers: {}  携带请求头
-				method：'get' get/post/.....   string
-				timeout: number  超时
-				progress：fn   进度
-				credentials: false  是否携带跨源凭证
-				emulateJSON：true post请求是需要携带的请求头
-				jsonp:'回调函数键' 默认是callback
-			响应：
-				body      返回的数据  对象  (JSONP.parse)
-				bodyText  返回的数据  文本格式  toString
-      */
             let vm = new Vue({ 
                 el : '.container',
                 data : {
@@ -52,7 +31,10 @@
                   //ES6中methos簡寫方式
                   get(){
                     //請求靜態文件
-                    let p1 = this.$http.get('/data/data.json');
+                    let p1 = this.$http({
+                      method:'get',
+                      url:'/data/data.json'
+                    });
                     p1.then(
                       function(res){
                         console.log(res);
@@ -62,28 +44,16 @@
                         console.log(err);
                       }
                     )
-                  },getphp(){
-                    let getUrl = "http://localhost/get.php?a=1&b=2"
-                    let p1 = this.$http.get(getUrl)
-                    .then(
-                      function(res){
-                        console.log(res);
-                        this.msg = res.data
-                      },
-                      function(err){
-                        console.log(err);
+                  },
+                  getphp(){
+                    let getUrl = "http://localhost/get.php"
+                    let p1 = this.$http({
+                      method:'get',
+                      url:getUrl,
+                      params:{
+                        a:1,
+                        b:2
                       }
-                    );
-                  },postphp(){
-                    //this.$http.post(Url,數據,配置)
-                    let postUrl = "http://localhost/post.php"
-                    let p2 = this.$http.post(postUrl,
-                    {
-                      a:1,
-                      b:2
-                    },
-                    {
-                      emulateJSON:true
                     })
                     .then(
                       function(res){
@@ -94,32 +64,34 @@
                         console.log(err);
                       }
                     );
-                  },queryJsonp(){
-                   
-                    //this.$http.jsonp(Url,數據,配置).then(回調)
-                  
-                    let jsonpUrl = `https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su`;
-                    //低版本
-                    /*
-                    let p3 = this.$http.jsonp(jsonpUrl,
-                    {
-                      wd:'zzzz'
-                    },
-                    {
-                      jsonp:'cb'
-                    }
-                    )
-                    .then(
+                  },
+                  postphp(){
+                    //this.$http.post(Url,數據,配置)
+                    let postUrl = "http://localhost/post.php"
+                    let p2 = this.$http({
+                      method:'post',
+                      url:postUrl,
+                      body:{
+                        a:1,
+                        b:2
+                      },
+                      emulateJSON:true
+                    }).then(
                       function(res){
                         console.log(res);
-                        this.msg = res.data.s
+                        this.msg = res.data
                       },
                       function(err){
                         console.log(err);
                       }
                     );
-                    */
-                    //高版本
+                  },
+                  queryJsonp(){
+                   
+                    //this.$http.jsonp(Url,數據,配置).then(回調)
+                  
+                    let jsonpUrl = `https://sp0.baidu.com/5a1Fazu8AA54nxGko9WTAnF6hhy/su`;
+                    
                     let p3 = this.$http.jsonp(jsonpUrl,
                     {
                       params:{
