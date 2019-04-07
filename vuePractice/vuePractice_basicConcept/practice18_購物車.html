@@ -16,6 +16,7 @@
         <dl v-for="(val,index) of list" :key="val.id">
             <dt>商品名稱: <span class="badge badge-primary">{{val.name}}</span></dt>
             <dd class="ml-3">單價:<span class="badge badge-info">{{val.price | currency('$',2)}}</span></dd>
+            <!-- 輸入最大值 最小值用法 -->
             <dd class="ml-3">數量:<input type="number" v-model="val.count" :min="val.min" :max="val.max"></dd>
             <dd class="ml-3">小記:<span class="badge badge-info"></span>{{val.count * val.price | currency('$',3)}}</span></dd>
         </dl>
