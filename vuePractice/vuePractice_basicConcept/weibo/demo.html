@@ -31,19 +31,55 @@
             return `${year}年${fillzero(mon)}月${fillzero(date)}日`;
         });
 
+        Vue.filter('pageFormat',function(index){
+            return index + 1;
+        });
+
         new Vue({
             el : '.znsArea',
-            //m層
             data : {
-                //數據名:值
+                courrentPageIndex:0,
                 iptContent:'',
+                pageList:[],
                 list:[]
             },
             methods:{
-                
+                addAccCount(index, id){
+                    //weibo.php?act=acc&id=12			顶某一条数据
+                    console.log("do addAccCount");
+                    axios({
+                        url:'http://localhost:80/weibo.php',
+                        params:{
+                            act:'acc',
+                            id:id
+                        }
+                    }).then((res)=>{
+                        console.log(res);
+                        this.list[index].acc = this.list[index].acc + 1;
+                    }).catch(error => {
+                         console.error(error)
+                    }); 
+                },
+                addRefCount(index, id){
+                    //weibo.php?act=ref&id=12			踩某一条数据
+                    console.log("do addRefCount");
+                    axios({
+                        url:'http://localhost:80/weibo.php',
+                        params:{
+                            act:'ref',
+                            id:id
+                        }
+                    }).then((res)=>{
+                        console.log(res);
+                        this.list[index].ref = this.list[index].ref + 1;
+                    }).catch(error => {
+                         console.error(error)
+                    }); 
+                },
                 add(){
                     //weibo.php?act=add&content=xxx	添加一条
                     //返回：{error:0, id: 新添加内容的ID, time: 添加时间}
+                    console.log("do add");
                     axios({
                         url:'http://localhost:80/weibo.php',
                         params:{
@@ -60,12 +96,35 @@
                             ref:0
                         })
                         this.iptContent = '';
-                    })
+                        this.get(1);
+                        this.clickPageCount(0);
+                    }).catch(error => {
+                         console.error(error)
+                    }); 
 
+                },
+                deleteData(index, id){
+                    //  weibo.php?act=del&id=12			删除一条数据
+                    console.log("do delete");
+                    
+                    axios({
+                        url:'http://localhost:80/weibo.php',
+                        params:{
+                            act:'del',
+                            id:id
+                        }
+                    }).then((res)=>{
+                        console.log(res);
+                        this.list.splice(index,1);
+                    }).catch(error => {
+                         console.error(error)
+                    }); 
+                    
                 },
                 get(n){
                     //weibo.php?act=get&page=1		获取一页数据
 				    //返回：[{id: ID, content: "内容", time: 时间戳, acc: 顶次数, ref: 踩次数}, {...}, ...]
+                    console.log("do get");
                     axios({
                         url:'http://localhost:80/weibo.php',
                         params:{
@@ -75,12 +134,55 @@
                     }).then((res)=>{
                         console.log(res);
                         this.list = res.data;
-                    })
+                    }).catch(error => {
+                         console.error(error)
+                    }); 
 			
+                },
+                getPageCount(){
+                    console.log("do getPageCount");
+                    axios({
+                        url:'http://localhost:80/weibo.php',
+                        params:{
+                            act:'get_page_count'
+                        }
+                    }).then((res)=>{
+                        console.log(res);
+                        let pageCount = res.data.count;
+                        for (let i = 0; i < pageCount; i++){
+                            let item = {};
+                            item.classValue = {};
+
+                            if(i == 0) item.classValue.active = true;
+                            else item.classValue.active = false;
+
+                            this.pageList.push(item);
+                        }
+                        console.log("this.pageList.length : "+this.pageList.length);
+                        //this.pageCount = res.data;
+                        //let fillzero = (n) => {return n<10?'0'+n:''+n}
+
+
+
+                    }).catch(error => {
+                         console.error(error)
+                    });
+                },
+                clickPageCount(index){
+                    console.log("do clickPageCount");
+
+                    let page = this.$options.filters.pageFormat(index);
+
+                    this.pageList[this.courrentPageIndex].classValue.active = false;
+                    this.pageList[index].classValue.active = true;
+                    this.courrentPageIndex = index;
+
+                    this.get(page);
                 }
             },
             created(){
               console.log('实例化之后')
+              this.getPageCount();
               this.get(1);
             },
           })
@@ -103,22 +205,20 @@
         <div class="commentOn">
             <div class="noContent" v-show="list.length == 0">暂无留言</div>
             <div class="messList">
-                <div class="reply" v-for="(item, index) of list">
+                <div class="reply" v-for="(item, index) of list" :key="item.id">
                     <p class="replyContent">{{item.content}}</p>
                     <p class="operation">
                         <span class="replyTime">{{item.time | date}}</span>
                         <span class="handle">
-                            <a href="javascript:;" class="top">{{item.acc}}</a>
-                            <a href="javascript:;" class="down_icon">{{item.ref}}</a>
-                            <a href="javascript:;" class="cut">删除</a>
+                            <a href="javascript:;" class="top" @click="addAccCount(index, item.id)">{{item.acc}}</a>
+                            <a href="javascript:;" class="down_icon" @click="addRefCount(index, item.id)">{{item.ref}}</a>
+                            <a href="javascript:;" class="cut" @click="deleteData(index, item.id)">删除</a>
                         </span>
                     </p>
                 </div>
             </div>
             <div class="page">
-                <a href="javascript:;" class="active">1</a>
-                <a href="javascript:;">2</a>
-                <a href="javascript:;">3</a>
+                <a v-for="(item, index) of pageList" :key="index" href="javascript:;" v-bind:class="item.classValue" @click="clickPageCount(index)">{{index | pageFormat}}</a>
             </div>
         </div>
     </div>
