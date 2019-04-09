@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>practice5_動畫_事件</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="./vue.js"></script>
+    <!--可至npm尋找animate的相關用法-->
+    <link rel="stylesheet" href="./css/animate.css">
+    <style>
+      .box{
+        background: red;
+        width: 100px;
+        height: 100px;
+      }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <input type="button" value="按鈕" @click="bl=!bl">
+        <transition
+          enter-active-class = "animated fadeIn"
+          leave-active-class = "animated fadeOut"
+
+          @before-enter="beforeEnter"  
+          @enter="enter"
+          @after-enter="afterEnter"
+          @before-leave="beforeLevae"
+          @leave="leave"
+          @after-leave="afterLeave"
+        >
+            <div class="box" v-show="bl">box</div>
+        </transition>
+        
+    </div>
+<script>
+  //
+    let vm = new Vue({
+        name : 'Main',
+        el : '#app',
+        data : {
+          bl:false
+        },
+        methods:{
+        beforeEnter(){
+          //入場前
+          console.log('beforeEnter')
+        },
+        enter(){
+          //入場中
+          //推荐http://VelocityJS.or 如果需要進度的話
+          console.log('enter')
+        },
+        afterEnter(el){// el == 动画元素
+          //入場後
+          console.log('afterEnter');
+          el.style.background='blue';
+        },
+        beforeLevae(){
+           //離場前
+          console.log('beforeLevae')
+        },
+        leave(){
+          //離場中
+          console.log('leave')
+        },
+        afterLeave(){
+          //離場後
+          console.log('afterLeave')
+        },
+      }
+    })
+</script>
+</body>
+</html

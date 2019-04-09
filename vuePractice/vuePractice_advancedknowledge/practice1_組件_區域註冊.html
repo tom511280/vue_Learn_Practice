@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>practice1_組件_區域註冊</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="./vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <v-header></v-header>
+</div>
+<script>
+
+    //定義
+    let hd = {
+        template : '<div>我是hd組件</div>'
+    }
+
+    //全局註冊
+    // Vue.component('組件名',組件變量名)
+    //Vue.component('hd',hd)
+
+    let vm = new Vue({
+        name : 'Main',
+        el : '#app',
+         //區域註冊
+        components:{
+            //組件名:組件變量名
+            'v-header':hd
+        }
+    })
+</script>
+</body>
+</html

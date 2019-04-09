@@ -1,0 +1,215 @@
+组件：
+	Vue根实例表示1个应用，一个应用有若干个组件拼装而成
+
+使用组件
+	<组件名></组件名>
+定义组件
+	定义:
+		1)	 let 组件变量名={};		√
+	注册(拼装)
+		a)	Vue.component('组件名',组件变量名);
+		b)	选项
+			components:{
+				组件名：组件变量名	√
+			}
+组件数据
+	data 要是个函数，且要有返回值 object
+
+模板：
+	组件内部: template: #id名
+	<tempate id='id名'...
+
+组件（单文件)
+	script + template + style
+------------------------------------------------------------
+
+组件数据流动/数据传递/通讯
+	
+	父->子  属性(props)		√
+		<子 :自定义属性="父数据"></..>
+		子组件:
+			选项
+			props:['自定义属性']   props:{自定义属性:{type/default/required/...}}
+		展示:	子模板	{{自定义属性}}
+	子->父  事件(自定义)
+		<子 @自定义事件="父方法"></..>
+		子:		this.$emit('自定义事件',子.数据名) 
+		父:		methods-> 父方法(接受数据){处理}
+	子A->父->子B  
+
+
+-----------------------------------------------------------------
+vue动画
+
+	动画组件: transition|transition-group	谁做动画，就包着谁
+	
+	组件属性:
+		enter-class = "类名"
+		enter-active-class = "类名"
+		leave-class = "类名"
+		leave-active-class = "类名"
+
+	transition组件事件:
+		@before-enter="方法(el)"   el==做动画的元素(原生)
+		@enter="方法"   不会频繁触发  需要进度  推荐http://VelocityJS.org
+		@after-enter="方法"
+		@before-leave="方法"
+		@leave="方法"
+		@after-leave="方法"
+
+	
+	 css库 animate.css
+		同 animation 有跳变
+	
+transition-group:
+	一组动画
+	transition-group 包着一组元素  ，每个元素要有key  其他的同transition
+
+
+-----------------------------------------------------------------
+
+
+SPA: single page application   单页面应用
+特点： 速度快，数据ajax请求，通过路由，页面不会整体重载
+实现:  路由 -> 加载(ajax)对应的内容  告诉你去哪?  根据url的不同，加载组件
+	 
+路由要求： 引入 vue-router.js
+
+路由使用流程：
+	0.	src = "vue-router.js"
+	1. 使用路由 (去哪)
+		<router-link to="/home">首页</router-link>
+  		<router-view>展示区</router-view>
+  		router-link 组件属性  
+			tag='li' 指定编译后的标签
+			active-class='类名' 指定激活后的样式
+	2. 配置路由(建立组件和请求的对应关系)	数组
+		[{path:'/home',component:home},,{}]
+		path 路径
+		component: 指向的组件变量名
+	3. 创建路由(传递配置)
+		router = new VueRouter(配置)
+		配置:	{routes:数组}
+	4. 顶层|根组件，注册路由 （路由控制页面组件的加载）
+		选项
+			router(选项):router (router对象)
+子路由：children
+	routes=[
+		{},
+		{
+			path:xx
+			component:xx
+			children:[  子路由
+				{}
+				..
+			]
+		},
+		{}
+	]
+
+参数配置:
+	{path:'xx/:参数变量',component:xx}
+
+传递参数 and 数据
+router-link to='xx/参数?a=1&b=2'
+router-link :to='{name:'xx',params:{},query:{}}'
+
+接收参数和数据
+	模板：{{this.$route.params|query|path}}
+	组件内：this.$route.params|query|path
+
+
+组件内部： this == 组件   this.方法|数据 访问组件自己的  this.$xxx 访问全局
+		   this.$router
+组件模板：	{{xxx}}  子个的数据  {{this.$router}} 全局数据
+			@事件="$router.xx()"
+
+组件内部实现路由跳转:
+	router.push(...)
+	this.$router.push({path:'...'})   添加一个路由 （记录到历史记录)
+	this.$router.replace({path:'...'})   替换一个路由 （不记录到历史记录)
+	this.$router.go(-1|1)|goBack()  回退/前进  history.go|goBack
+------------------------------------------------------------------------
+模块化(commonJs/es6): (模块==文件,一切都要模块化(js/html/css/png/css/..... .vue/ ))
+工程化: 搭建项目环境(前端+后端)  /   工具  webpack
+自动化: (编译->工具)  /   工具  webpack
+
+
+webpack  打包工具 转换工具 模块加载器
+
+vue-cli 脚手架  (搭建项目环境)  命令行工具
+
+es6模块化
+
+
+webpack:	
+	干嘛的:	项目管理、打包、模块管理、加载资源(js/css/html/png../woff/data/vue...),转换器
+	前身：grunt/gulp/browserify->webpack
+
+	官网：http://webpack.github.io/  1.x  2.x
+		  https://webpack.js.org/    3.x 
+
+使用流程:
+	安装: 条件   node + npm/yarn/bower环境
+		1.	全局环境安装   npm install webpack -g   装的是命令行工具  
+		2.	项目环境安装   npm init -y -> npm install webpack -D  状态的是项目管理环境
+	打包:
+		webpack a.js b.js	把a文件打包到b
+	加载资源:
+		非js的资源，需要loader(转换器),loader就是个包
+
+		加载css : 	npm install css-loader style-loader
+
+		es6 转 es5 : babel-loader babel-core babel-preset-es2015
+	模块管理:
+		module:{
+			rules:[
+				{test:'要转换的文件',use:['要使用的loader1','loader2']}
+			]
+		}
+	webpack项目配置:	webpack.config.js	就是一个node程序
+		webpack.config.js:  配置一些webpack相关信息(入口，出口模块，loader)
+
+		命令行：webpack  参数
+			参数： p 压缩 需要压缩工具  -w 实时监听自动打包 -d 开启source-map模式
+------------------------------------------------------------------------------------
+
+需要自动刷新浏览器(webpack搭建前端web服务器的工具webpack-dev-server)
+安装:	npm install webpack-dev-server -g
+	webpack-dev-server 开启web服务器  localhost:8080
+	webpack-dev-server 参数
+		参数:	--port 8001  改端口
+				--open 开启浏览器
+				--hot 热重载(局部修改)   old
+				--inline 热重载(局部修改)  news
+	参数配置方式:
+		webpack.config.js
+			devServer:{ //webpack-dev-server 配置
+			    port: 8001,
+			    open: true
+			  }
+		package.json -> scripts
+			"start|dev":"webpack-dev-server --port xxxx --open"
+			npm start
+------------------------------------------------------------------------------------
+
+脚手架: vue-cli  搭建vue项目环境
+
+安装 npm instal vue-cli -g          vue --version -V
+
+创建项目环境: 
+	vue init webpack-simple 目录    webpack-simple|webpack  模板
+	cd 目录
+	npm install
+	npm run dev  运行
+	开发....
+	npm run build 打包
+
+------------------------------------------------------------------------------------
+vue-cli + axios|vue-resource
+	微博:
+	许愿墙:
+------------------------------------------------------------------------------------
+项目:
+	es6:
+	状态管理: vuex

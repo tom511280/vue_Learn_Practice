@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>practice3_組件_嵌套</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="./vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <!-- 使用組件 -->
+        <child></child>
+    </div>
+
+<script>
+    //每個組件的內部一定要有一個根元素
+    let vm = new Vue({
+        name : 'Main',
+        el : '#app',
+        components:{
+          child: {
+            template:'<div><div>子組件</div><child2></child2></div>',
+            components:{
+              child2:{
+                template:'<div>孫組件</div>'
+              }
+            }
+          }
+        }
+    })
+</script>
+</body>
+</html

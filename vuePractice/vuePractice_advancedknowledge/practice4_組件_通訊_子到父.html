@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>practice4_組件_通訊_子到父</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="./vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <h3>我是父</h3>
+        我收到的:{{msg2}}
+        <!--
+        <child @自訂義事件="父方法"></child>
+        -->
+        <child @to-parent="show"></child>
+    </div>
+
+    <template id="child">
+      <div class="child">
+        <h3>我是子組件</h3>
+        <div>{{msg}}</div>
+      </div>
+    </template>
+<script>
+    //數據為單向流動 父可以改變子 但是子無法改變父
+    let child={
+      props:['m','m2'],
+      template:'#child',
+      data(){
+        return {
+          msg:'子數據'
+        }
+      },
+      //mounted(組件掛載完畢)就可以取得事件 子先父後
+      mounted(){
+        //$emit類似togger
+        this.$emit("to-parent", this.msg)
+      }
+    }
+
+    let vm = new Vue({
+        name : 'Main',
+        el : '#app',
+        data : {
+          msg:'父數據',
+          msg2:''
+        },
+        components:{
+          child
+        },
+        methods:{
+          show(data){
+            alert(data);
+            this.msg2=data;
+          }
+        }
+    })
+</script>
+</body>
+</html

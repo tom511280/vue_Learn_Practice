@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>practice5_動畫_淡入淡出</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="./vue.js"></script>
+    <!--可至npm尋找animate的相關用法-->
+    <link rel="stylesheet" href="./css/animate.css">
+    <style>
+      .box{
+        background: red;
+        width: 100px;
+        height: 100px;
+      }
+    </style>
+</head>
+<body>
+    <div id="app">
+        <input type="button" value="按鈕" @click="bl=!bl">
+        <transition
+          enter-active-class = "animated fadeIn"
+          leave-active-class = "animated fadeOut"
+        >
+            <div class="box" v-show="bl">box</div>
+        </transition>
+        
+    </div>
+<script>
+    let vm = new Vue({
+        name : 'Main',
+        el : '#app',
+        data : {
+          bl:false
+        }
+    })
+</script>
+</body>
+</html

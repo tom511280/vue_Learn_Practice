@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>practice1_組件_多組件使用_切開頁面與邏輯</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="./vue.js"></script>
+    
+</head>
+<body>
+<div id="app">
+    <!-- 將以下部分拆分出三塊組件 -->
+    <!-- 
+        *須注意命名必須要和一般html做區隔 不然會有衝突 
+        *可以使用v-header的方式命名組件
+    -->
+
+    <!-- p1 -->
+    <hd></hd>
+    <!--
+    <div class="header">
+        <Nav>
+            <a href="xx">xx</a>
+            <a href="xx">xx</a>
+            <a href="xx">xx</a>
+        </Nav>
+    </div>
+    -->
+
+    <!-- p2 -->
+    <wrap></wrap>
+    <!--
+    <div class="wrap">內容</div>
+    -->
+
+    <!-- p3 -->
+    <ft></ft>
+    <!--
+    <div class="footer">sss</div>
+    -->
+    
+</div>
+
+
+<!-- hd組件(未來會拉到外部獨立成單檔) start-->
+<style>
+    .hd{background: red}
+</style>
+<template id="hd">
+
+    <div class="hd">
+        <nav>
+            <a v-for="(val, index) in arr" href="XX">{{val}}</a>
+        </nav>
+    </div>
+</template>
+<script>
+     //定義
+    //ES6中反單引可以支援換行而不用在輸入\
+    let hd = {
+        //一般用法
+        /*
+        template : `
+        <div>
+            <nav>
+                dfdffdf
+            </nav>
+        </div>`*/
+        //分離用法
+        //template : '選擇器'
+        template : '#hd',
+        data(){
+            return{
+                arr:['apple','orange', 'banana']
+            }
+        }
+    }
+</script>
+<!-- hd組件(未來會拉到外部獨立成單檔) end-->
+
+
+
+
+<!-- wrap組件 -->
+<template id="wrap">
+    <div>
+            
+    </div>
+</template>
+
+<!-- ft組件 -->
+<template id="ft">
+    <div>
+            
+    </div>
+</template>
+
+<script>
+    let wrap = {
+        template : '<div>我是wrap組件{{msg}}</div>',
+        data:function(){
+            return {
+                msg: 'bmw'
+            }
+        }
+    }
+    let ft = {
+        template : '<div @click="show" >我是ft組件</div>',
+        methods:{
+            show(){
+                alert("ok");
+            }
+        }
+    }
+
+    //註冊
+    let vm = new Vue({
+        name : 'Main',
+        el : '#app',
+        /*
+        components:{
+            hd:hd,
+            wrap:wrap,
+            ft:ft
+        }
+        */
+        //ES6寫法
+        components:{
+            hd, wrap, ft
+        }
+    })
+</script>
+</body>
+</html

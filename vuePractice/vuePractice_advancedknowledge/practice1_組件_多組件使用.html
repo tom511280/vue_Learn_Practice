@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>practice1_組件_多組件使用</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="./vue.js"></script>
+</head>
+<body>
+<div id="app">
+    <!-- 將以下部分拆分出三塊組件 -->
+    <!-- 
+        *須注意命名必須要和一般html做區隔 不然會有衝突 
+        *可以使用v-header的方式命名組件
+    -->
+
+    <!-- p1 -->
+    <hd></hd>
+    <!--
+    <div class="header">
+        <Nav>
+            <a href="xx">xx</a>
+            <a href="xx">xx</a>
+            <a href="xx">xx</a>
+        </Nav>
+    </div>
+    -->
+
+    <!-- p2 -->
+    <wrap></wrap>
+    <!--
+    <div class="wrap">內容</div>
+    -->
+
+    <!-- p3 -->
+    <ft></ft>
+    <!--
+    <div class="footer">sss</div>
+    -->
+    
+</div>
+<script>
+
+    //定義
+    //ES6中反單引可以支援換行而不用在輸入\
+    let hd = {
+        template : `
+        <div>
+            <nav>
+                dfdffdf
+            </nav>
+        </div>`
+    }
+    let wrap = {
+        template : '<div>我是wrap組件</div>'
+    }
+    let ft = {
+        template : '<div>我是ft組件</div>'
+    }
+
+    //註冊
+    let vm = new Vue({
+        name : 'Main',
+        el : '#app',
+        /*
+        components:{
+            hd:hd,
+            wrap:wrap,
+            ft:ft
+        }
+        */
+        //ES6寫法
+        components:{
+            hd, wrap, ft
+        }
+    })
+</script>
+</body>
+</html
