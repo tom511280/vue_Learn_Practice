@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>practice6_路由</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="./vue.js"></script>
+    <script src="./js/vue-router.js"></script>
+</head>
+<body>
+<div id="app">
+    <!--路由的調用-->
+    <router-link to="/home">首頁</router-link>
+    <router-link to="/news">新聞</router-link>
+    <router-link to="/user">用戶</router-link>
+    <!--切換展示區-->
+    <router-view></router-view>
+
+</div>
+<script>
+    //定義組件
+    let home = {
+        template:'<div>我是主頁</div>'
+    }
+    let news = {
+        template:'<div>我是新聞頁</div>'
+    }
+    let user = {
+        template:'<div>我是用戶頁</div>'
+    }
+    let error = {
+        template:'<div>404</div>'
+    }
+
+    //配置路由
+    let routes = [
+        {path:'/home',component:home},
+        {path:'/news',component:news},
+        {path:'/user',component:user},
+        {path:'/',redirect:'/home'}, //路由跳轉
+        {path:'*',component:error} //*=任意路由 //**任意子路由
+        //{path:'/',component:home},
+    ]
+
+    //創建路由對象
+    let router = new VueRouter({
+        //key:value
+        //route:數組
+        //兩值如果相同可以簡寫
+        //routes:routes
+        routes
+    })
+
+
+
+    let vm = new Vue({
+        name : 'Main',
+        el : '#app',
+        data:{
+
+        },
+        // router:路由對象
+        router
+    })
+</script>
+</body>
+</html

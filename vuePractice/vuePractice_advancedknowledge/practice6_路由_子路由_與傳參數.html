@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>practice6_路由_子路由</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="./vue.js"></script>
+    <script src="./js/vue-router.js"></script>
+</head>
+<body>
+<div id="app">
+    <!--路由的調用-->
+    <router-link to="/home">首頁</router-link>
+    <router-link to="/news">新聞</router-link>
+    <router-link to="/user">用戶</router-link>
+    <!--切換展示區-->
+    <router-view></router-view>
+
+</div>
+
+<!--子組件-->
+<template id="user">
+    <div class="user">
+        <h3>我是用戶頁</h3>
+        <router-link to="/user/login">登入</router-link>
+        <router-link to="/user/reg">註冊</router-link>
+        <router-view></router-view>
+    </div>
+</template>
+
+<!--子組件-->
+<template id="news">
+        <div class="news">
+            <h3>我是新聞頁</h3>
+            <!-- tag="li" 可以將路由解析成span標籤li 預設為<a> -->
+            <!-- 有可能兩個<a>包覆會有問題 -->    
+            <router-link tag="li" to="/news/detail/001"><a href="">列表001</a></router-link>
+            <router-link tag="li" to="/news/detail/002">列表002</router-link>
+            <router-link tag="li" to="/news/detail/003">列表003</router-link>
+            <!-- 路由也可以使用數據綁定的方式 -->
+            <router-link tag="li" :to="{name:'detail',params:{aid:'004'}}">列表004</router-link>
+            <router-link tag="li" :to="{name:'detail',params:{aid:'005'}, query:{data:'ttt'}}">列表005</router-link>
+            <router-view></router-view>
+        </div>
+</template>
+
+<!--子組件-->
+<template id="detail">
+        <div class="detail">
+            <h3>我是詳情頁</h3>
+            接收參數 : {{$route.params.aid}}
+            接收數據 : {{$route.query.data}}
+        </div>
+</template>
+
+<script>
+    //定義組件
+    let home = {
+        template:'<div>我是主頁</div>'
+    }
+    let news = {
+        template:'#news'
+    }
+    let user = {
+        template:'#user'
+    }
+    let error = {
+        template:'<div>404</div>'
+    }
+    let login = {
+        template:'<div>login</div>'
+    }
+    let reg = {
+        template:'<div>reg</div>'
+    }
+    let detail = {
+        template:'#detail',
+        mounted(){
+            console.log(this.$route.params.aid)
+            console.log(this.$route.query.data)
+            //this.$http(url, params;{id:aid})
+        }
+    }
+
+    //配置路由
+    let routes = [
+        {path:'/home',component:home},
+        {
+            path:'/news',
+            component:news,
+            //子路由
+            children:[
+                    //:aid --> 變量
+                    {
+                        name:'detail',
+                        path:'detail/:aid',
+                        component:detail
+                    }
+            ] 
+        },
+        {
+            path:'/user',
+            component:user,
+            //子路由
+            children:[
+                {path:'login',component:login},
+                {path:'reg',component:reg},
+                {path:'',redirect:'/user/login'}//子路由默認頁
+            ]
+        },
+        {path:'/',redirect:'/home'}, //路由跳轉
+        {path:'*',component:error} //*=任意路由 //**任意子路由
+        //{path:'/',component:home},
+    ]
+
+    //創建路由對象
+    let router = new VueRouter({
+        //key:value
+        //route:數組
+        //兩值如果相同可以簡寫
+        //routes:routes
+        routes
+    })
+
+
+
+    let vm = new Vue({
+        name : 'Main',
+        el : '#app',
+        data:{
+
+        },
+        // router:路由對象
+        router
+    })
+</script>
+</body>
+</html
